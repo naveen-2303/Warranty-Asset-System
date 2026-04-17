@@ -24,5 +24,9 @@ app.get('/', (req, res) => {
   res.send("Warranty System API is running...");
 });
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`🚀 Server started on port ${PORT}`));
+c// This tells the app to use Render's port, or 5000 if running locally
+const PORT = process.env.PORT || 5000; 
+
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
