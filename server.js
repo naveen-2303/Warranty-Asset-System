@@ -1,32 +1,30 @@
-const productRoutes = require('./routes/productRoutes');
-const authRoutes = require('./routes/authRoutes');
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
-const cors = require('cors');
-app.use(cors());
+const path = require('path');
+
 const app = express();
 
 // Middleware
-app.use(express.json()); // Allows the backend to understand JSON
-app.use(cors()); // Allows your React frontend to talk to this backend
-app.use('/api/auth', authRoutes);
-app.use('/api/products', productRoutes);
-app.use('/uploads', express.static('uploads'));
+app.use(cors()); // Only one declaration of cors allowed!
+app.use(express.json());
+
+// Serve static files from the 'uploads' folder
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// Routes
+app.use('/api/auth', require('./routes/authRoutes'));
+app.use('/api/products', require('./routes/productRoutes'));
+
 // Database Connection
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("✅ MongoDB Connected Successfully"))
-  .catch(err => console.error("❌ Database Connection Error:", err));
+const MONGO_URI = process.env.MONGO_URI;
+mongoose.connect(MONGO_URI)
+    .then(() => console.log('✅ MongoDB Connected Successfully'))
+    .catch(err => console.log('❌ MongoDB Connection Error:', err));
 
-// Basic Test Route
-app.get('/', (req, res) => {
-  res.send("Warranty System API is running...");
-});
-
-c// This tells the app to use Render's port, or 5000 if running locally
-const PORT = process.env.PORT || 5000; 
-
+// Dynamic Port for Deployment
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log(`🚀 Server running on port ${PORT}`);
 });
